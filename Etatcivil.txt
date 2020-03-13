@@ -1,2 +1,6 @@
-1,1,1,1
-12,2,12,12
+10,Cloutier,Maxence,FR
+16,LE FEYER,Aymeric,FR
+24,LE FEYER,Maelys,FR
+5,VANHERSEL,Emilie,BE
+17,Oiram,Mario,IT
+78,Son,Goku,JAP
