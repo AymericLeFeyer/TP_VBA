@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Dim num As String, TP As String, DS As String, CP As String, Adresse As String
 Dim exist As Boolean, n As Integer, exist2 As Boolean
 Dim Result() As String, Result2() As String
@@ -53,8 +54,12 @@ Private Sub CommandButton1_Click()
     
     If (exist = True) Then
         If (num <> "" And TP <> "" And DS <> "") Then
-            Print #2, num & "," & TP & "," & DS
-            MsgBox "Les notes sont créées"
+            If (IsNumeric(TP) And IsNumeric(DS)) Then
+                Print #2, num & "," & TP & "," & DS
+                MsgBox "Les notes sont créées"
+            Else
+                MsgBox "Les notes doivent être numériques"
+            End If
         Else
             MsgBox "Il faut remplir tous les champs"
         End If
@@ -187,3 +192,6 @@ Close #2
 
 End Sub
 
+Private Sub TextBox6_Change()
+
+End Sub
