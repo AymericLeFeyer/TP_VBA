@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Dim numEtudiant, num, nom, prenom, natio As String
 Dim TP, DS As String
 Dim CP, Adresse As String
@@ -22,6 +21,7 @@ Dim Result() As String
 Dim Tablo(10000) As String
 
 Private Sub CheckBox1_Click()
+    'Si la case 1 est cochee, on coche les 2 autres
     If (CheckBox1.Value = True) Then
         If (CheckBox2.Enabled = True) Then
             CheckBox2.Value = True
@@ -48,6 +48,7 @@ Private Sub CommandButton1_Click()
         Line Input #1, ContenuLigneEC
         Result = Split(ContenuLigneEC, ",")
         If (Result(0) = numEtudiant) Then
+            'Si le numero etudiant existe, on debloque les champs de l'etat civil et la case a cocher pour la suppression
             etudiantExist = True
             num = Result(0)
             TextBox2.Value = num
@@ -73,6 +74,7 @@ Private Sub CommandButton1_Click()
             Line Input #2, ContenuLigneN
             Result = Split(ContenuLigneN, ",")
             If (Result(0) = numEtudiant) Then
+                'Si des notes existent, on debloque les champs et la case
                 TP = Result(1)
                 TextBox6.Enabled = True
                 TextBox6.Value = TP
@@ -98,6 +100,7 @@ Private Sub CommandButton1_Click()
             Line Input #3, ContenuLigneA
             Result = Split(ContenuLigneA, ",")
             If (Result(0) = numEtudiant) Then
+                'On debloque les champs d'adresse
                 CP = Result(1)
                 TextBox8.Enabled = True
                 TextBox8.Value = CP
@@ -118,6 +121,7 @@ Private Sub CommandButton1_Click()
         Close #3
     
     Else
+        'Si l'etudiant n'existe pas, on bloque tout et on remet les champs nuls
         MsgBox "Cet étudiant n'existe pas"
         TextBox2.Enabled = False
         TextBox3.Enabled = False
@@ -148,12 +152,13 @@ Private Sub CommandButton1_Click()
 End Sub
 
 Private Sub CommandButton2_Click()
-
+    'Valeurs des champs
     numEtudiant = TextBox1.Value
     num = TextBox2.Value
     nom = TextBox9.Value
     prenom = TextBox3.Value
     natio = TextBox4.Value
+    'Si les notes ne sont pas numeriques, erreur
     If (IsNumeric(TextBox6.Value)) Then
         TP = TextBox6.Value
     Else
@@ -174,17 +179,21 @@ Private Sub CommandButton2_Click()
         Line Input #1, ContenuLigne
         Result = Split(ContenuLigne, ",")
         If Result(0) = numEtudiant Then
+            'On change les valeurs de Result en fonction des valeurs des champs
             Result(1) = nom
             Result(2) = prenom
             Result(3) = natio
         End If
+        'On ajoute a Tablo la ligne formatee, prete a etre print dans le fichier
         Tablo(i) = Result(0) & "," & Result(1) & "," & Result(2) & "," & Result(3)
         i = i + 1
     Wend
     Close #1
+    'On ouvre de nouveau Etatcivil, il sera vierge
     Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Output As #1
     j = 0
     While j < i
+        'On ajoute toutes les lignes de Tablo
         Print #1, Tablo(j)
         j = j + 1
     Wend
@@ -197,16 +206,20 @@ Private Sub CommandButton2_Click()
         Line Input #1, ContenuLigne
         Result = Split(ContenuLigne, ",")
         If Result(0) = numEtudiant Then
+        'On change les valeurs de Result en fonction des valeurs des champs
             Result(1) = TP
             Result(2) = DS
         End If
+        'On ajoute a Tablo la ligne formatee, prete a etre print dans le fichier
         Tablo(i) = Result(0) & "," & Result(1) & "," & Result(2)
         i = i + 1
     Wend
     Close #1
+    'On ouvre de nouveau Notes, il sera vierge
     Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Notes.txt" For Output As #1
     j = 0
     While j < i
+        'On ajoute toutes les lignes de Tablo
         Print #1, Tablo(j)
         j = j + 1
     Wend
@@ -219,33 +232,36 @@ Private Sub CommandButton2_Click()
         Line Input #1, ContenuLigne
         Result = Split(ContenuLigne, ",")
         If Result(0) = numEtudiant Then
+            'On change les valeurs de Result en fonction des valeurs des champs
             Result(1) = CP
             Result(2) = Adresse
         End If
+        'On ajoute a Tablo la ligne formatee, prete a etre print dans le fichier
         Tablo(i) = Result(0) & "," & Result(1) & "," & Result(2)
         i = i + 1
     Wend
     Close #1
+    'On ouvre de nouveau Adresses, il sera vierge
     Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Adresses.txt" For Output As #1
     j = 0
     While j < i
+        'On ajoute toutes les lignes de Tablo
         Print #1, Tablo(j)
         j = j + 1
     Wend
     Close #1
     
     MsgBox "Etudiant modifié"
-    
-    
-    
 
 End Sub
 
 Private Sub CommandButton3_Click()
+    'Si aucune case n'est cochee, rien a faire
     If (CheckBox1.Value = False And CheckBox2.Value = False And CheckBox3.Value = False) Then
         MsgBox "Aucune case n'est cochée"
     End If
    
+    'On supprime l'etat civil
     If (CheckBox1.Value = True) Then
         'Recup etatcivil.txt
         i = 0
@@ -254,6 +270,7 @@ Private Sub CommandButton3_Click()
             Line Input #1, ContenuLigne
             Result = Split(ContenuLigne, ",")
             If Result(0) = numEtudiant Then
+                'On n'ajoute pas cette ligne dans Tablo, afin de le supprimer
                 MsgBox "Etat civil supprimé"
                 TextBox1.Value = ""
                 TextBox2.Value = ""
@@ -267,15 +284,18 @@ Private Sub CommandButton3_Click()
             
         Wend
         Close #1
+        'On ecrase Etatcivil
         Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Output As #1
         j = 0
         While j < i
+            'On ajoute toutes les lignes de Tablo
             Print #1, Tablo(j)
             j = j + 1
         Wend
         Close #1
     End If
     
+    'On supprime les notes
     If (CheckBox2.Value = True) Then
         'Recup notes.txt
         i = 0
@@ -284,6 +304,7 @@ Private Sub CommandButton3_Click()
             Line Input #1, ContenuLigne
             Result = Split(ContenuLigne, ",")
             If Result(0) = numEtudiant Then
+                'On n'ajoute pas cette ligne dans Tablo, afin de le supprimer
                 MsgBox "Notes supprimées"
                 TextBox6.Value = ""
                 TextBox5.Value = ""
@@ -293,15 +314,18 @@ Private Sub CommandButton3_Click()
             End If
         Wend
         Close #1
+        'On ecrase Notes
         Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Notes.txt" For Output As #1
         j = 0
         While j < i
+            'On ajoute les lignes de Tablo dans le fichier
             Print #1, Tablo(j)
             j = j + 1
         Wend
         Close #1
     End If
     
+    'On supprime l'adresse
     If (CheckBox3.Value = True) Then
         'Recup adresses.txt
         i = 0
@@ -310,6 +334,7 @@ Private Sub CommandButton3_Click()
             Line Input #1, ContenuLigne
             Result = Split(ContenuLigne, ",")
             If Result(0) = numEtudiant Then
+                'On n'ajoute pas cette ligne dans Tablo, afin de le supprimer
                 MsgBox "Adresse supprimée"
                 TextBox8.Value = ""
                 TextBox7.Value = ""
@@ -320,36 +345,16 @@ Private Sub CommandButton3_Click()
             End If
         Wend
         Close #1
+        'On ecrase Adresses
         Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Adresses.txt" For Output As #1
         j = 0
         While j < i
+            'On ajoute les lignes de Tablo dans Adresses
             Print #1, Tablo(j)
             j = j + 1
         Wend
         Close #1
     End If
-    
-    
-    
-    
 End Sub
 
-Private Sub TextBox5_Change()
 
-End Sub
-
-Private Sub TextBox6_Change()
-
-End Sub
-
-Private Sub TextBox7_Change()
-
-End Sub
-
-Private Sub TextBox8_Change()
-
-End Sub
-
-Private Sub TextBox9_Change()
-
-End Sub
