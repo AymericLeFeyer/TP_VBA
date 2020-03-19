@@ -119,3 +119,50 @@ k = 0
     End If
 
 End Sub
+
+Private Sub CommandButton4_Click()
+    nom = TextBox3.Value
+    prenom = TextBox4.Value
+    num = ""
+    exist = False
+    
+    'Parcours des noms
+    If (nom <> "" And prenom <> "") Then
+        Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Input As #1
+        While Not EOF(1)
+            Line Input #1, ContenuLigne
+            Result = Split(ContenuLigne, ",")
+            If (Result(1) = nom And Result(2) = prenom) Then
+                num = Result(0)
+            End If
+        Wend
+        Close #1
+    Else
+        MsgBox "Champs invalides"
+    End If
+    
+    'Parcours des notes et affichage
+    If (num <> "") Then
+        Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Notes.txt" For Input As #1
+        While Not EOF(1)
+            Line Input #1, ContenuLigne
+            Result = Split(ContenuLigne, ",")
+            If (Result(0) = num) Then
+                TextBox5.Value = CStr(Round(((CDbl(Result(1)) + 2 * CDbl(Result(2))) / 3), 2))
+   
+                TextBox5.Value = TextBox5.Value & "/20"
+                exist = True
+            End If
+        Wend
+        Close #1
+    End If
+    
+    If (exist = False) Then
+        MsgBox "Aucune note pour cet étudiant !"
+        TextBox3.Value = ""
+        TextBox4.Value = ""
+        TextBox5.Value = ""
+    End If
+    
+
+End Sub
