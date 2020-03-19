@@ -13,8 +13,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Dim addThem(1000) As String
 Dim adresses(1000) As String
+Dim merge(1000) As String
+
 
 Private Sub CommandButton1_Click()
 ville = TextBox1.Value
@@ -165,4 +168,197 @@ Private Sub CommandButton4_Click()
     End If
     
 
+End Sub
+
+Private Sub CommandButton5_Click()
+lettre = TextBox7.Value
+newLettre = ""
+i = 0
+c = 0
+j = 0
+
+'Parcours des etudiants
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Input As #1
+
+While Not EOF(1)
+    Line Input #1, ContenuLigne
+    Result = Split(ContenuLigne, ",")
+    newLettre = Left(Result(2), 1)
+    If (newLettre <> lettre) Then
+        addThem(i) = Result(0) & "," & Result(1) & "," & Result(2) & "," & Result(3)
+        i = i + 1
+    Else
+        c = c + 1
+    End If
+Wend
+MsgBox CStr(c) & " étudiants supprimés"
+
+Close #1
+
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Output As #1
+
+While j < i
+    Print #1, addThem(j)
+    j = j + 1
+Wend
+
+Close #1
+
+
+End Sub
+
+Private Sub CommandButton6_Click()
+'Affichage des etudiants
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Input As #1
+
+ListBox3.Clear
+
+
+While Not EOF(1)
+    Line Input #1, ContenuLigne
+    Result = Split(ContenuLigne, ",")
+    ListBox3.AddItem "Etudiant " & Result(0) & " : " & Result(1) & " " & Result(2) & ", " & Result(3)
+Wend
+
+Close #1
+End Sub
+
+Private Sub CommandButton7_Click()
+'Variables
+i = 0
+j = 0
+numEtu = ""
+
+'Check Checkboxes
+mergeNum = CheckBox1.Value
+mergeNom = CheckBox2.Value
+mergePrenom = CheckBox5.Value
+mergeNatio = CheckBox6.Value
+mergeTP = CheckBox3.Value
+mergeDS = CheckBox7.Value
+mergeCP = CheckBox4.Value
+mergeAdresse = CheckBox8.Value
+
+'Check Values
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Etatcivil.txt" For Input As #1
+
+While Not EOF(1)
+    'Etatcivil
+    Line Input #1, ContenuLigne
+    Result = Split(ContenuLigne, ",")
+    numEtu = Result(0)
+    If (mergeNum = True) Then
+        If (merge(i) = "") Then
+            merge(i) = "num:" & Result(0)
+        Else
+            merge(i) = merge(i) & ", num:" & Result(0)
+        End If
+    End If
+    If (mergeNom) Then
+        If (merge(i) = "") Then
+            merge(i) = "nom:" & Result(1)
+        Else
+            merge(i) = merge(i) & ", nom:" & Result(1)
+        End If
+    End If
+    If (mergePrenom) Then
+        If (merge(i) = "") Then
+            merge(i) = "prenom:" & Result(2)
+        Else
+            merge(i) = merge(i) & ", prenom:" & Result(2)
+        End If
+    End If
+    If (mergeNatio) Then
+        If (merge(i) = "") Then
+            merge(i) = "natio:" & Result(3)
+        Else
+            merge(i) = merge(i) & ", natio:" & Result(3)
+        End If
+            
+    End If
+    
+    'Notes
+    Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Notes.txt" For Input As #2
+    While Not EOF(2)
+        Line Input #2, ContenuLigne
+        Result = Split(ContenuLigne, ",")
+        If (Result(0) = numEtu) Then
+            If (mergeTP = True) Then
+                If (merge(i) = "") Then
+                    merge(i) = "TP:" & Result(1)
+                Else
+                    merge(i) = merge(i) & ", TP:" & Result(1)
+                End If
+            End If
+            If (mergeDS = True) Then
+                If (merge(i) = "") Then
+                    merge(i) = "DS:" & Result(2)
+                Else
+                    merge(i) = merge(i) & ", DS:" & Result(2)
+                End If
+            End If
+        End If
+    Wend
+    Close #2
+    
+    'Adresses
+    Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Adresses.txt" For Input As #3
+    While Not EOF(3)
+        Line Input #3, ContenuLigne
+        Result = Split(ContenuLigne, ",")
+        If (Result(0) = numEtu) Then
+            If (mergeCP = True) Then
+                If (merge(i) = "") Then
+                    merge(i) = "CP:" & Result(1)
+                Else
+                    merge(i) = merge(i) & ", CP:" & Result(1)
+                End If
+            End If
+            If (mergeAdresse = True) Then
+                If (merge(i) = "") Then
+                    merge(i) = "Adresse:" & Result(2)
+                Else
+                    merge(i) = merge(i) & ", Adresse:" & Result(2)
+                End If
+            End If
+        End If
+    Wend
+    Close #3
+    
+    i = i + 1
+    
+    
+    
+Wend
+
+Close #1
+
+
+'Print in fusion.txt
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Fusion.txt" For Output As #4
+While j < i
+    Print #4, merge(j)
+    j = j + 1
+Wend
+Close #4
+
+'Reset array
+j = 0
+While j < i
+    merge(j) = ""
+    j = j + 1
+Wend
+
+End Sub
+
+Private Sub CommandButton8_Click()
+ListBox4.Clear
+
+Open "C:\Users\Aymeric\Documents\GitHub\TP_VBA" & "\Fusion.txt" For Input As #1
+While Not EOF(1)
+    Line Input #1, ContenuLigne
+    ListBox4.AddItem ContenuLigne
+Wend
+
+Close #1
 End Sub

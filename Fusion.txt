@@ -1,0 +1,3 @@
+num:1, nom:VANHERSEL, prenom:Emilie, natio:FR, TP:10, DS:20, CP:59, Adresse:Wormhout
+num:3, nom:LE FEYER, prenom:Maelys, natio:FR, CP:59, Adresse:Aniche
+num:16, nom:LE FEYER, prenom:Aymeric, natio:FR, TP:6, DS:12, CP:59, Adresse:Aniche
